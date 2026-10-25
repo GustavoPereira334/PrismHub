@@ -1,0 +1,43 @@
+.config-panel, .devices-panel, .surface-card { border: 1px solid var(--border-soft); border-radius: var(--radius-xl); background: linear-gradient(145deg, rgba(18,22,34,.98), rgba(13,17,27,.98)); box-shadow: var(--shadow); }
+.config-panel { padding: 21px; }
+.control-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 12px; margin-top: 12px; }
+.control-card { min-width: 0; padding: 15px; border: 1px solid var(--border-soft); border-radius: var(--radius-md); background: rgba(255,255,255,.018); }
+.control-card legend { float: left; width: 100%; margin-bottom: 12px; color: var(--text-soft); font-size: 10px; font-weight: 700; }
+.color-picker-row { display: flex; align-items: center; gap: 11px; clear: both; }
+input[type="color"] { width: 47px; height: 47px; padding: 3px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-input); cursor: pointer; }
+input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 8px; }
+.color-picker-row > div { min-width: 0; flex: 1; display: grid; gap: 5px; }
+.color-picker-row label, .apply-card > label { color: var(--text-muted); font-size: 8px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; }
+.color-picker-row input[type="text"], select { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-soft); background: var(--bg-input); }
+.color-picker-row input.invalid { border-color: var(--danger); }
+#color-error { min-height: 11px; color: var(--danger); font-size: 8px; }
+.color-palette { display: flex; align-items: center; gap: 8px; margin-top: 11px; }
+.swatch { width: 20px; height: 20px; border: 2px solid transparent; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255,255,255,.09); transition: transform var(--ease); }
+.swatch:hover, .swatch.selected { transform: scale(1.14); border-color: white; }
+.swatch.blue { background: var(--cyan); } .swatch.violet { background: var(--violet); } .swatch.pink { background: var(--pink); } .swatch.red { background: var(--danger); } .swatch.green { background: var(--green); } .swatch.amber { background: var(--amber); }
+.effects-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; clear: both; }
+.effect-card { min-width: 0; min-height: 60px; display: grid; place-items: center; align-content: center; gap: 4px; border: 1px solid var(--border-soft); border-radius: 10px; color: var(--text-muted); background: #111622; cursor: pointer; font-size: 8px; font-weight: 650; transition: var(--ease); }
+.effect-card:hover { color: var(--text); border-color: #394158; }
+.effect-card:focus-within { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.effect-card.active { color: white; border-color: rgba(124,92,255,.65); background: rgba(124,92,255,.12); box-shadow: inset 0 0 18px rgba(124,92,255,.08); }
+.effect-card input { position: absolute; opacity: 0; pointer-events: none; }
+.effect-icon { color: var(--violet-light); font-size: 18px; line-height: 1; }
+.tuning-card { display: grid; gap: 14px; }
+.range-labels { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-soft); font-size: 9px; font-weight: 650; }
+.range-labels output { color: var(--violet-light); }
+input[type="range"] { width: 100%; height: 4px; appearance: none; border-radius: 4px; background: linear-gradient(90deg, var(--violet) var(--range-value, 50%), #282d3e var(--range-value, 50%)); }
+input[type="range"]::-webkit-slider-thumb { width: 13px; height: 13px; appearance: none; border: 2px solid white; border-radius: 50%; background: var(--violet); box-shadow: 0 0 9px rgba(124,92,255,.8); }
+.apply-card { display: grid; gap: 7px; }
+select { font-size: 10px; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px; }
+.toggle-row > div, .setting-row > div { display: grid; gap: 2px; }
+.toggle-row strong { font-size: 9px; }.toggle-row small { color: var(--text-muted); font-size: 8px; }
+.toggle-switch { flex: 0 0 auto; width: 38px; height: 21px; padding: 3px; border-radius: 20px; background: #292f3e; transition: var(--ease); }
+.toggle-switch span { display: block; width: 15px; height: 15px; border-radius: 50%; background: #b4bbca; transition: transform var(--ease), background var(--ease); }
+.toggle-switch.active { background: var(--violet); box-shadow: 0 0 12px rgba(124,92,255,.25); }
+.toggle-switch.active span { transform: translateX(17px); background: white; }
+.panel-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-soft); }
+.panel-actions p { color: var(--text-muted); font-size: 9px; }.panel-actions p > span { color: var(--green); margin-right: 4px; }.panel-actions p strong { color: var(--text-soft); }
+.btn-primary { min-height: 38px; display: inline-flex; justify-content: center; align-items: center; gap: 16px; padding: 0 19px; border-radius: 10px; color: white; background: var(--gradient-button); box-shadow: 0 10px 24px rgba(124,92,255,.2); font-size: 10px; font-weight: 750; transition: transform var(--ease), filter var(--ease); }
+.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.1); }.btn-primary.compact { min-height: 36px; white-space: nowrap; }
+@media (max-width: 1180px) { .config-panel { padding: 17px; } .control-grid { gap: 9px; } .control-card { padding: 12px; } .lighting-preview { min-height: 250px; } }

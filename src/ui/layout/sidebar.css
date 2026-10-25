@@ -1,0 +1,27 @@
+.sidebar { flex: 0 0 238px; height: 100vh; padding: 24px 16px 18px; display: flex; flex-direction: column; background: linear-gradient(180deg, #0d101a, #0a0d15); border-right: 1px solid var(--border-soft); position: relative; z-index: 5; }
+.sidebar::after { content: ""; position: absolute; inset: 0 0 0 auto; width: 1px; background: linear-gradient(transparent, rgba(124,92,255,.45), transparent); opacity: .45; }
+.sidebar-header { display: flex; align-items: center; gap: 12px; padding: 0 8px 26px; }
+.brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: rgba(124,92,255,.1); box-shadow: inset 0 0 0 1px rgba(124,92,255,.16); }
+.brand-mark img { width: 28px; height: 28px; }
+.sidebar-header h1 { font-size: 17px; letter-spacing: -.3px; }
+.sidebar-header p { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+.menu-label { color: #535c70; font-size: 9px; font-weight: 800; letter-spacing: 1.7px; padding: 0 12px 10px; }
+.sidebar-menu { display: grid; gap: 5px; }
+.nav-link { width: 100%; min-height: 44px; display: flex; align-items: center; gap: 12px; padding: 0 12px; color: #858da2; background: transparent; border: 1px solid transparent; border-radius: 11px; text-align: left; transition: color var(--ease), background var(--ease), border-color var(--ease), transform var(--ease); }
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,.035); transform: translateX(2px); }
+.nav-link.active { color: #fff; background: linear-gradient(90deg, rgba(124,92,255,.18), rgba(124,92,255,.06)); border-color: rgba(124,92,255,.18); box-shadow: inset 3px 0 var(--violet); }
+.nav-link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.nav-link:first-of-type svg { fill: currentColor; stroke: none; }
+.nav-link > span:nth-child(2) { flex: 1; font-weight: 600; font-size: 13px; }
+.nav-count { min-width: 21px; height: 20px; display: grid; place-items: center; border-radius: 7px; color: var(--text-soft); background: #1c2231; font-size: 10px; font-weight: 700; }
+.nav-live { width: 7px; height: 7px; border-radius: 50%; background: var(--violet-light); box-shadow: 0 0 10px var(--violet); }
+.sidebar-promo { margin-top: auto; margin-bottom: 18px; padding: 15px; border: 1px solid rgba(124,92,255,.18); border-radius: 14px; background: radial-gradient(circle at 0 0, rgba(124,92,255,.19), transparent 55%), #111522; }
+.promo-icon { width: 28px; height: 28px; margin-bottom: 10px; display: grid; place-items: center; border-radius: 9px; color: var(--cyan); background: rgba(39,215,255,.08); }
+.sidebar-promo strong { display: block; font-size: 12px; }
+.sidebar-promo p { margin: 5px 0 12px; color: var(--text-muted); font-size: 10px; line-height: 1.5; }
+.sidebar-promo button { width: 100%; padding: 8px; border-radius: 8px; color: #ddd7ff; background: rgba(124,92,255,.14); font-size: 10px; font-weight: 700; }
+.sidebar-footer { padding: 16px 8px 0; border-top: 1px solid var(--border-soft); color: var(--text-muted); font-size: 10px; }
+.sidebar-footer div { display: flex; gap: 8px; align-items: center; color: var(--text-soft); font-size: 11px; }
+.status-dot, .sync-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px rgba(61,219,154,.75); }
+.sidebar-footer p { margin: 5px 0 9px 15px; }
+.sidebar-footer > span { color: #4e5668; }

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>PrismHub</title>
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../ui/main.css">
+</head>
+<body>
+  <aside class="sidebar" aria-label="Navegação principal">
+    <div class="sidebar-header"><span class="brand-mark"><img src="../assets/logo.svg" alt=""></span><div><h1>PrismHub</h1><p>Central de dispositivos</p></div></div>
+    <nav class="sidebar-menu">
+      <p class="menu-label">CONTROLE</p>
+      <button class="nav-link" type="button" data-view-target="overview" aria-label="Visão geral"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span>Visão geral</span></button>
+      <button class="nav-link active" type="button" data-view-target="rgb" aria-label="Iluminação RGB" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-1.1-.9-2-2-2h-2.2a1.8 1.8 0 0 1-1.3-3L17 5.5A8.9 8.9 0 0 0 12 3Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="7.8" cy="15" r="1"/></svg><span>Iluminação RGB</span><span class="nav-live" aria-label="ativo"></span></button>
+      <button class="nav-link" type="button" data-view-target="devices" aria-label="Dispositivos"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dispositivos</span><span class="nav-count" id="nav-device-count">0</span></button>
+      <button class="nav-link" type="button" data-view-target="settings" aria-label="Configurações"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg><span>Configurações</span></button>
+    </nav>
+    <div class="sidebar-promo"><span class="promo-icon">✦</span><strong>Integração de hardware</strong><p>Controles aparecem apenas para adaptadores confirmados.</p><button type="button" data-action="sync-now">Consultar dispositivos</button></div>
+    <footer class="sidebar-footer"><div><span class="status-dot pending" id="service-status-dot"></span><strong id="service-status">Procurando dispositivos</strong></div><p id="connected-count">Nenhum dispositivo compatível encontrado</p><span>v0.1.0 • Preview</span></footer>
+  </aside>
+
+  <main class="dashboard-content" id="main-content"> 
+    <header class="main-header">
+      <div class="header-titles"><p class="eyebrow" id="page-eyebrow">ILUMINAÇÃO</p><h1 id="page-title">Iluminação RGB</h1><p id="page-subtitle">Sincronize cores e efeitos em todos os seus dispositivos.</p></div>
+      <div class="header-actions"><span class="sync-badge" role="status"><span class="dot pending" id="header-status-dot"></span><span id="header-status">Aguardando dispositivos</span></span><button type="button" class="icon-button" aria-label="Notificações"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span></button><button type="button" class="avatar-button" aria-label="Abrir perfil">GP</button></div>
+    </header>
+
+    <section class="view" data-view="overview" tabindex="-1" hidden>
+      <div class="hero-card"><div><span class="hero-kicker">ESTADO DO SISTEMA</span><h2 id="overview-title">Procurando dispositivos conectados...</h2><p id="overview-subtitle">O PrismHub exibirá somente hardware informado pelo Windows.</p></div><div class="hero-orbit" aria-hidden="true"><span></span><img src="../assets/logo.svg" alt=""></div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-icon violet">⌁</span><div><p>Dispositivos detectados</p><strong id="overview-device-count">0</strong><small id="overview-device-state">Aguardando consulta</small></div></article>
+        <article class="stat-card"><span class="stat-icon cyan">◈</span><div><p>Controláveis</p><strong id="overview-controllable-count">0</strong><small>Nenhum adaptador validado</small></div></article>
+        <article class="stat-card"><span class="stat-icon green">↯</span><div><p>Iluminação</p><strong id="overview-lighting-count">0</strong><small>Capacidade confirmada</small></div></article>
+        <article class="stat-card"><span class="stat-icon pink">◎</span><div><p>Estado</p><strong id="overview-system-state">Aguardando</strong><small>Dados do Windows</small></div></article>
+      </div>
+      <div class="overview-grid">
+        <section class="surface-card"><div class="section-heading"><div><span>SEU SETUP</span><h2>Dispositivos encontrados</h2></div><button type="button" class="text-button" data-go-to="devices">Ver todos →</button></div><div class="compact-device-list" id="overview-device-list"><p class="empty-state">Procurando dispositivos conectados...</p></div></section>
+        <aside class="surface-card activity-card"><div class="section-heading"><div><span>STATUS</span><h2>Atividade do serviço</h2></div></div><ol class="activity-list" id="service-activity"><li><i class="activity-dot violet"></i><div><strong>Consulta do Windows iniciada</strong><small>Aguardando resposta do sistema</small></div></li></ol></aside>
+      </div>
+    </section>
+
+    <section class="view active" data-view="rgb" tabindex="-1">
+      <div class="rgb-layout">
+        <section class="config-panel" aria-labelledby="rgb-panel-title">
+          <div class="panel-heading"><div><span>PRÉ-VISUALIZAÇÃO LOCAL</span><h2 id="rgb-panel-title">Prepare uma configuração</h2></div><button type="button" class="btn-secondary" id="restore-profile">Restaurar controles</button></div>
+          <div class="lighting-preview" id="lighting-preview" data-effect="estatico"><div class="preview-glow"></div><div class="scan-line"></div>
+            <svg class="device-art keyboard-art" viewBox="0 0 410 150" aria-label="Prévia de teclado RGB"><rect class="device-shell" x="8" y="18" width="394" height="124" rx="14"/><g class="rgb-stroke"><path d="M27 40h22v18H27zM56 40h22v18H56zM85 40h22v18H85zM114 40h22v18h-22zM143 40h22v18h-22zM172 40h22v18h-22zM201 40h22v18h-22zM230 40h22v18h-22zM259 40h22v18h-22zM288 40h22v18h-22zM317 40h22v18h-22zM346 40h37v18h-37zM27 66h26v18H27zM60 66h22v18H60zM89 66h22v18H89zM118 66h22v18h-22zM147 66h22v18h-22zM176 66h22v18h-22zM205 66h22v18h-22zM234 66h22v18h-22zM263 66h22v18h-22zM292 66h22v18h-22zM321 66h22v18h-22zM350 66h33v18h-33zM27 92h32v18H27zM66 92h22v18H66zM95 92h22v18H95zM124 92h22v18h-22zM153 92h22v18h-22zM182 92h22v18h-22zM211 92h22v18h-22zM240 92h22v18h-22zM269 92h22v18h-22zM298 92h22v18h-22zM327 92h56v18h-56zM27 118h48v12H27zM82 118h30v12H82zM119 118h142v12H119zM268 118h32v12h-32zM307 118h76v12h-76z"/></g></svg>
+            <svg class="device-art mouse-art" viewBox="0 0 130 180" aria-label="Prévia de mouse RGB"><path class="device-shell" d="M65 8c-31 0-49 25-49 62v38c0 38 18 64 49 64s49-26 49-64V70C114 33 96 8 65 8Z"/><path class="rgb-stroke" d="M65 9v48m-48 45c31 16 65 16 96 0M55 62h20v29H55z"/></svg>
+            <svg class="device-art headset-art" viewBox="0 0 180 190" aria-label="Prévia de headset RGB"><path class="device-shell" d="M27 101V82a63 63 0 0 1 126 0v19M40 92H26c-9 0-16 8-16 18v35c0 10 7 18 16 18h20c6 0 10-5 10-11v-49c0-6-4-11-10-11h-6Zm100 0h14c9 0 16 8 16 18v35c0 10-7 18-16 18h-20c-6 0-10-5-10-11v-49c0-6 4-11 10-11h6Z"/><path class="rgb-stroke" d="M31 91V81a59 59 0 0 1 118 0v10M42 105v43m96-43v43"/></svg>
+            <div class="preview-caption"><span class="live-pill"><i></i>PRÉVIA</span><div><strong>Configuração local</strong><small>Nenhum dispositivo RGB confirmado</small></div></div>
+          </div>
+          <div class="control-grid">
+            <fieldset class="control-card color-control"><legend>Cor principal</legend><div class="color-picker-row"><input type="color" id="color-picker" value="#7C5CFF" aria-label="Selecionar cor"><div><label for="hex-color">Código hexadecimal</label><input type="text" id="hex-color" value="#7C5CFF" maxlength="7" spellcheck="false" aria-describedby="color-error"><small id="color-error" aria-live="polite"></small></div></div><div class="color-palette" aria-label="Cores predefinidas"><button type="button" class="swatch blue" data-color="#27D7FF" aria-label="Ciano"></button><button type="button" class="swatch violet selected" data-color="#7C5CFF" aria-label="Violeta"></button><button type="button" class="swatch pink" data-color="#FF4FD8" aria-label="Rosa"></button><button type="button" class="swatch red" data-color="#FF5C7A" aria-label="Vermelho"></button><button type="button" class="swatch green" data-color="#3DDB9A" aria-label="Verde"></button><button type="button" class="swatch amber" data-color="#FFB84D" aria-label="Âmbar"></button></div></fieldset>
+            <fieldset class="control-card effects-section"><legend>Efeito de iluminação</legend><div class="effects-grid"><label class="effect-card active"><input type="radio" name="effect" value="estatico" checked><span class="effect-icon">●</span><span>Estático</span></label><label class="effect-card"><input type="radio" name="effect" value="pulso"><span class="effect-icon">◉</span><span>Pulso</span></label><label class="effect-card"><input type="radio" name="effect" value="onda"><span class="effect-icon">≋</span><span>Onda</span></label><label class="effect-card"><input type="radio" name="effect" value="espectro"><span class="effect-icon">✦</span><span>Espectro</span></label></div></fieldset>
+            <div class="control-card tuning-card"><div class="range-group"><div class="range-labels"><label for="brightness">Brilho da prévia</label><output for="brightness">80%</output></div><input type="range" id="brightness" min="0" max="100" value="80"></div><div class="range-group"><div class="range-labels"><label for="speed">Velocidade do efeito</label><output for="speed">55%</output></div><input type="range" id="speed" min="0" max="100" value="55"></div></div>
+            <div class="control-card apply-card"><label for="apply-target">Aplicar em</label><select id="apply-target"><option value="all">Todos os dispositivos compatíveis</option><option value="keyboard">Apenas teclado</option><option value="mouse">Apenas mouse</option><option value="headset">Apenas headset</option></select><div class="toggle-row"><div><strong>Prévia em tempo real</strong><small>Atualizar somente a visualização na tela</small></div><button type="button" id="realtime-sync" role="switch" aria-label="Prévia em tempo real" aria-checked="true" class="toggle-switch active"><span></span></button></div></div>
+          </div>
+          <div class="panel-actions"><p id="profile-status"><span>!</span> Nenhum dispositivo com iluminação confirmada</p><button type="button" class="btn-primary" id="apply-lighting" disabled>Aplicar iluminação <span>→</span></button></div>
+        </section>
+        <aside class="devices-panel" aria-labelledby="synced-title"><div class="panel-heading compact"><div><span>PRISM SYNC</span><h2 id="synced-title">Dispositivos RGB</h2></div><span class="device-total" id="rgb-device-total">0 controláveis</span></div><div class="devices-list" id="rgb-device-list"><p class="empty-state">Dispositivo detectado, mas ainda não controlável.</p></div><button type="button" class="btn-add-device" data-go-to="devices"><span>＋</span>Ver dispositivos</button></aside>
+      </div>
+    </section>
+
+    <section class="view" data-view="devices" tabindex="-1" hidden>
+      <div class="toolbar"><label class="search-box"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><span class="sr-only">Pesquisar dispositivos</span><input id="device-search" type="search" placeholder="Buscar dispositivo..."></label><div class="filter-group" role="group" aria-label="Filtrar dispositivos"><button type="button" class="filter-button active" data-filter="all" aria-pressed="true">Todos</button><button type="button" class="filter-button" data-filter="input" aria-pressed="false">Entrada</button><button type="button" class="filter-button" data-filter="audio" aria-pressed="false">Áudio</button></div><button type="button" class="btn-primary compact" data-action="discover">＋ Adicionar dispositivo</button></div>
+      <div class="full-device-grid" id="full-device-grid"><p class="empty-state">Procurando dispositivos conectados...</p></div><p class="empty-state" id="device-empty" hidden>Nenhum dispositivo compatível encontrado.</p>
+    </section>
+
+    <section class="view" data-view="settings" tabindex="-1" hidden>
+      <div class="settings-layout"><div class="settings-column">
+        <section class="surface-card settings-card"><div class="section-heading"><div><span>APLICATIVO</span><h2>Comportamento</h2></div></div><div class="setting-row"><div><strong>Iniciar com o Windows</strong><p>Abra o PrismHub automaticamente ao entrar.</p></div><button type="button" class="toggle-switch active" role="switch" aria-label="Iniciar com o Windows" aria-checked="true"><span></span></button></div><div class="setting-row"><div><strong>Minimizar para a bandeja</strong><p>Mantenha a sincronização ativa em segundo plano.</p></div><button type="button" class="toggle-switch active" role="switch" aria-label="Minimizar para a bandeja" aria-checked="true"><span></span></button></div><div class="setting-row"><div><strong>Atualizações automáticas</strong><p>Baixe novas versões quando disponíveis.</p></div><button type="button" class="toggle-switch" role="switch" aria-label="Atualizações automáticas" aria-checked="false"><span></span></button></div></section>
+        <section class="surface-card settings-card"><div class="section-heading"><div><span>INTERFACE</span><h2>Experiência visual</h2></div></div><label class="form-row"><span><strong>Escala da interface</strong><small>Ajuste o tamanho dos elementos.</small></span><select><option>100% (Recomendado)</option><option>90%</option><option>110%</option></select></label><label class="form-row"><span><strong>Idioma</strong><small>Idioma usado no aplicativo.</small></span><select><option>Português (Brasil)</option><option>English</option></select></label></section>
+      </div><aside class="settings-column"><section class="surface-card profile-card"><div class="profile-avatar">PH</div><h2>Perfil local</h2><p>Preferências armazenadas neste computador</p><div class="profile-stats"><span><strong id="settings-device-count">0</strong><small>Dispositivos</small></span><span><strong>Informação indisponível</strong><small>Perfis</small></span></div><button type="button" class="btn-secondary wide" data-action="edit-profile">Editar perfil</button></section><section class="surface-card about-card"><div class="about-brand"><img src="../assets/logo.svg" alt=""><div><strong>PrismHub</strong><small>Versão 0.1.0 Preview</small></div></div><p>Sua central unificada de periféricos e iluminação.</p><button type="button" class="text-button" data-action="check-update">Verificar atualizações →</button></section></aside></div>
+    </section>
+  </main>
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <dialog class="device-dialog" id="device-dialog" aria-labelledby="dialog-device-name"><form method="dialog"><button class="dialog-close" value="cancel" aria-label="Fechar">×</button><span class="dialog-kicker">DISPOSITIVO</span><h2 id="dialog-device-name">Informação do dispositivo</h2><p id="dialog-device-description">Detalhes adicionais estarão disponíveis quando um adaptador compatível for validado.</p><div class="dialog-status"><span id="dialog-device-state">Informação indisponível</span><span id="dialog-device-capability">Recurso não suportado</span></div><button class="btn-secondary" value="cancel">Fechar</button></form></dialog>
+  <script type="module" src="renderer.js"></script>
+</body>
+</html>

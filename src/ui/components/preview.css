@@ -1,0 +1,22 @@
+.lighting-preview { --preview-brightness: .8; min-height: 275px; margin-top: 17px; position: relative; overflow: hidden; border: 1px solid rgba(124,92,255,.18); border-radius: var(--radius-lg); background: radial-gradient(ellipse at 43% 48%, color-mix(in srgb, var(--rgb-color) 17%, transparent), transparent 52%), linear-gradient(145deg, #0b0e18, #111522); isolation: isolate; }
+.lighting-preview::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px); background-size: 24px 24px; mask-image: linear-gradient(to bottom, black, transparent); }
+.preview-glow { width: 440px; height: 170px; position: absolute; left: 9%; top: 48px; border-radius: 50%; background: var(--rgb-color); filter: blur(80px); opacity: calc(var(--preview-brightness) * .16); }
+.device-art { position: absolute; overflow: visible; filter: drop-shadow(0 0 11px color-mix(in srgb, var(--rgb-color) 35%, transparent)); opacity: calc(.55 + var(--preview-brightness) * .45); }
+.device-shell { fill: #101522; stroke: #3a4256; stroke-width: 2; }
+.rgb-stroke { fill: none; stroke: var(--rgb-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.keyboard-art { width: 48%; left: 7%; top: 50px; transform: perspective(420px) rotateX(7deg) rotateZ(2deg); }
+.mouse-art { width: 11%; left: 60%; top: 45px; transform: rotate(8deg); }
+.headset-art { width: 15%; right: 7%; top: 36px; transform: rotate(-5deg); }
+.preview-caption { position: absolute; inset: auto 18px 17px; display: flex; align-items: center; gap: 12px; z-index: 2; }
+.preview-caption div { display: grid; gap: 2px; }
+.preview-caption strong { font-size: 12px; }
+.preview-caption small { color: var(--text-muted); font-size: 9px; }
+.live-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border: 1px solid rgba(61,219,154,.2); border-radius: 8px; color: #9cf0c9; background: rgba(61,219,154,.08); font-size: 8px; font-weight: 800; letter-spacing: 1px; }
+.live-pill i { width: 5px; height: 5px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+.scan-line { display: none; position: absolute; z-index: 1; left: 4%; right: 4%; top: 55%; height: 2px; background: linear-gradient(90deg, transparent, var(--rgb-color), transparent); box-shadow: 0 0 18px var(--rgb-color); opacity: .7; }
+.lighting-preview[data-effect="onda"] .scan-line { display: block; animation: wave var(--effect-duration, 2.45s) ease-in-out infinite; }
+.lighting-preview[data-effect="pulso"] .device-art { animation: pulse var(--effect-duration, 2.45s) ease-in-out infinite; }
+.lighting-preview[data-effect="espectro"] .rgb-stroke { animation: spectrum var(--effect-duration, 2.45s) linear infinite; }
+@keyframes wave { 0%,100% { transform: translateY(-72px); opacity: .1; } 50% { transform: translateY(70px); opacity: .8; } }
+@keyframes pulse { 50% { opacity: .35; filter: drop-shadow(0 0 24px var(--rgb-color)); } }
+@keyframes spectrum { 0% { stroke: var(--cyan); } 33% { stroke: var(--violet); } 66% { stroke: var(--pink); } 100% { stroke: var(--cyan); } }
