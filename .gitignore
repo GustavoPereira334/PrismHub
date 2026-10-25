@@ -13,10 +13,20 @@ build/
 .env.*
 !.env.example
 
+# Local project instructions and planning
+AGENTS.md
+.github/
+.superpowers/
+docs/superpowers/
+
 # Logs, reports, and test artifacts
 *.log
 coverage/
 .playwright-cli/
+test/
+
+# Local license and generated notes
+THIRD_PARTY_NOTICES.md
 
 # Operating system files
 .DS_Store
