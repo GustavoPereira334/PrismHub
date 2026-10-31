@@ -1,45 +1,102 @@
 # Dependencies
 node_modules/
 
-# Build and packaging output
+# Electron / application builds
 dist/
 out/
 release/
 build/
+artifacts/
+vendor/
 *.asar
+*.blockmap
+latest*.yml
 
-# Environment and local secrets
+# Native module build output
+.node-gyp/
+**/build/Release/
+**/build/Debug/
+
+# Environment files and secrets
 .env
 .env.*
 !.env.example
+*.local
 
-# Local project instructions and planning
-AGENTS.md
-.github/
-.superpowers/
-docs/superpowers/
-
-# Logs, reports, and test artifacts
+# Logs and diagnostic output
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+electron-debug.log*
+
+# Tests, coverage and browser artifacts
 coverage/
+.nyc_output/
+playwright-report/
+test-results/
+blob-report/
+.playwright/
 .playwright-cli/
-test/
 
-# Local license and generated notes
-THIRD_PARTY_NOTICES.md
+# Tool and package-manager caches
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.npm/
+.pnpm-store/
+*.tsbuildinfo
 
-# Operating system files
-.DS_Store
-Thumbs.db
-Desktop.ini
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
 
-# IDE and editor files
+# IDEs and editors
+.idea/
+.fleet/
+.vs/
+.history/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
-.idea/
-*.swp
+!.vscode/tasks.json
+!.vscode/launch.json
 
-# Native build/cache artifacts
-.cache/
-*.tsbuildinfo
+# Operating-system metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Windows crash dumps and installer leftovers
+*.dmp
+*.stackdump
+*.msi
+*.msix
+*.appx
+*.appxbundle
+
+# Local signing credentials (never commit)
+*.pfx
+*.p12
+*.cer
+*.key
+*.pem
+
+# Local automation scratch data
+.superpowers/
+docs/superpowers/

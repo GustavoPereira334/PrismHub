@@ -2,6 +2,8 @@ const pages = {
   overview: { eyebrow: 'CENTRAL', title: 'Visão geral', subtitle: 'Acompanhe todo o seu setup em um só lugar.' },
   rgb: { eyebrow: 'ILUMINAÇÃO', title: 'Iluminação RGB', subtitle: 'Sincronize cores e efeitos em todos os seus dispositivos.' },
   devices: { eyebrow: 'HARDWARE', title: 'Dispositivos', subtitle: 'Gerencie periféricos, conexões e perfis individuais.' },
+  mouse: { eyebrow: 'PERIFÉRICOS', title: 'Mouse', subtitle: 'Configure DPI, polling rate e controles do mouse compatível.' },
+  keyboard: { eyebrow: 'PERIFÉRICOS', title: 'Teclado', subtitle: 'Configure teclas, macros e iluminação do teclado compatível.' },
   settings: { eyebrow: 'PREFERÊNCIAS', title: 'Configurações', subtitle: 'Personalize a experiência e o comportamento do PrismHub.' },
 };
 
@@ -30,10 +32,12 @@ export function initNavigation() {
     title.textContent = pages[name].title;
     subtitle.textContent = pages[name].subtitle;
     document.title = `${pages[name].title} • PrismHub`;
+    document.getElementById('main-content').scrollTop = 0;
     if (moveFocus) nextView.focus({ preventScroll: true });
   }
 
   links.forEach((link) => link.addEventListener('click', () => openView(link.dataset.viewTarget)));
   document.querySelectorAll('[data-go-to]').forEach((button) => button.addEventListener('click', () => openView(button.dataset.goTo)));
+  openView('overview', false);
   return { openView };
 }

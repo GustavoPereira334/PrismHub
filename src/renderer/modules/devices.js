@@ -1,7 +1,7 @@
 import { showToast } from './feedback.js';
 
 const stateLabels = {
-  detected: 'Detectado - controles ainda não disponíveis',
+  detected: 'Detectado — RGB ainda sem suporte',
   'partially-supported': 'Suporte parcial',
   controllable: 'Controlável',
   certified: 'Certificado',
@@ -11,7 +11,7 @@ const stateLabels = {
   error: 'Erro de comunicação com o dispositivo'
 };
 
-const categoryLabels = { audio: 'Áudio', input: 'Entrada', usb: 'USB', other: 'Outro' };
+const categoryLabels = { audio: 'Áudio', input: 'Entrada', usb: 'USB', internal: 'Componente interno', other: 'Outro' };
 
 function text(value, fallback = 'Informação indisponível') {
   return value || fallback;
@@ -73,7 +73,7 @@ function openDeviceDialog(device) {
   state.textContent = stateLabels[device.state] || 'Estado indisponível';
   const candidate = device.adapterCandidates?.[0];
   capability.textContent = device.capabilities.lighting
-    ? 'Iluminação confirmada'
+    ? device.connection === 'openrgb' ? 'RGB disponível pelo OpenRGB' : 'RGB disponível pelo adaptador'
     : candidate
       ? `Possível ${candidate.label} - identificação ainda não confirmada`
       : 'Controles não confirmados';
@@ -101,6 +101,17 @@ function setText(id, value) {
 }
 
 export function initDevices() {
+  const renderHardwareStatus = (status) => {
+    const messages = {
+      connected: 'Motor RGB conectado',
+      connecting: 'Conectando ao motor RGB...',
+      unavailable: 'Motor RGB indisponível; adaptadores nativos mantidos',
+      disconnected: 'Motor RGB desconectado'
+    };
+    setText('openrgb-status', messages[status?.openrgb?.state] || 'Aguardando motor RGB');
+  };
+  window.prismHub?.hardware?.subscribe(renderHardwareStatus);
+  window.prismHub?.hardware?.status().then(renderHardwareStatus).catch(() => renderHardwareStatus(null));
   const search = document.getElementById('device-search');
   const filters = [...document.querySelectorAll('[data-filter]')];
   const grid = document.getElementById('full-device-grid');
@@ -128,7 +139,7 @@ export function initDevices() {
       rgbList.replaceChildren();
       const message = document.createElement('p');
       message.className = 'empty-state';
-      message.textContent = lighting.length ? `${lighting.length} dispositivo(s) com iluminação confirmada.` : 'Dispositivo detectado, mas ainda não controlável.';
+      message.textContent = lighting.length ? lighting.map(device => device.name).join(' · ') : 'Conecte um dispositivo com suporte a iluminação.';
       rgbList.append(message);
     }
     setText('rgb-device-total', `${lighting.length} ${lighting.length === 1 ? 'controlável' : 'controláveis'}`);
@@ -137,13 +148,28 @@ export function initDevices() {
     setText('overview-device-count', String(devices.length));
     setText('overview-controllable-count', String(devices.filter((device) => device.state === 'controllable' || device.state === 'certified').length));
     setText('overview-lighting-count', String(lighting.length));
-    setText('overview-device-state', devices.length ? 'Informações recebidas do Windows' : 'Nenhum dispositivo compatível');
+    const sources = devices.some(device => device.connection === 'openrgb') ? 'do sistema e do OpenRGB' : 'do sistema';
+    setText('overview-device-state', devices.length ? `Informações recebidas ${sources}` : 'Nenhum dispositivo compatível');
     setText('overview-system-state', devices.length ? 'Detectado' : 'Vazio');
     setText('overview-title', devices.length ? 'Dispositivos encontrados' : 'Nenhum dispositivo compatível encontrado');
     setText('overview-subtitle', devices.length ? 'Controles aparecem somente quando um adaptador confirma a capacidade.' : 'O PrismHub continuará monitorando conexões do Windows.');
     setText('service-status', devices.length ? 'Serviço de hardware ativo' : 'Nenhum dispositivo compatível');
     setText('header-status', devices.length ? `${devices.length} dispositivo(s) detectado(s)` : 'Aguardando dispositivos');
     setText('settings-device-count', String(devices.length));
+    const activity = document.querySelector('#service-activity li');
+    if (activity) {
+      activity.querySelector('strong').textContent = window.prismHub ? 'Consulta de dispositivos concluída' : 'Prévia da interface';
+      activity.querySelector('small').textContent = window.prismHub ? `${devices.length} dispositivo(s) informados ${sources}` : 'Abra o PrismHub desktop para conectar seu setup.';
+    }
+    const caption = document.querySelector('.preview-caption small');
+    if (caption) caption.textContent = lighting.length ? `${lighting.length} dispositivo(s) com controle disponível` : 'Visualização ilustrativa; nenhum controle RGB disponível';
+    if (!window.prismHub) {
+      setText('header-status', 'Prévia no navegador');
+      setText('service-status', 'Abra no aplicativo desktop');
+      setText('connected-count', 'A detecção de hardware funciona no PrismHub para Windows.');
+      setText('overview-title', 'Seu setup começa aqui');
+      setText('overview-subtitle', 'Abra o aplicativo desktop para detectar seus dispositivos. Nesta prévia, explore a interface e prepare perfis locais.');
+    }
   };
 
   filters.forEach((button) => button.addEventListener('click', () => {

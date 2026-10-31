@@ -1,0 +1,39 @@
+{
+  "openrgb": {
+    "file": "OpenRGB_1.1_Windows_64.zip",
+    "version": "1.1",
+    "url": "https://codeberg.org/OpenRGB/OpenRGB/releases/download/release_1.1/OpenRGB_1.1_Windows_64_8e16de2.zip",
+    "sha256": "63291726c6fc84eb479ef2ee752e97e1187f6ce9c49fd27eee40ded588a8172a"
+  },
+  "source": {
+    "file": "OpenRGB-source-1.1.tar.gz",
+    "url": "https://codeberg.org/OpenRGB/OpenRGB/archive/release_1.1.tar.gz",
+    "sha256": "8b919ad446de7f0415e2271a1881f94cd4f14e384a3c59acfcb3f540125f0107"
+  },
+  "pawnio": {
+    "file": "PawnIO_setup.exe",
+    "version": "2.2.0",
+    "url": "https://github.com/namazso/PawnIO.Setup/releases/download/2.2.0/PawnIO_setup.exe",
+    "sha256": "1f519a22e47187f70a1379a48ca604981c4fcf694f4e65b734aaa74a9fba3032"
+  },
+  "qtbase": {
+    "file": "qtbase-6.8.3.tar.xz",
+    "url": "https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtbase-everywhere-src-6.8.3.tar.xz",
+    "sha256": "56001b905601bb9023d399f3ba780d7fa940f3e4861e496a7c490331f49e0b80"
+  },
+  "qt5compat": {
+    "file": "qt5compat-6.8.3.tar.xz",
+    "url": "https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qt5compat-everywhere-src-6.8.3.tar.xz",
+    "sha256": "54b9c84bff34b423dd8c472862ce1009753ff505e418b4ef33907416da16b82e"
+  },
+  "hidapi": {
+    "file": "hidapi-hotplug.tar.gz",
+    "url": "https://codeberg.org/OpenRGB/hidapi-hotplug/archive/238df449ecc0a56a70a3c8f4ebf46bb46857af27.tar.gz",
+    "sha256": "5fc62f790dcb7cbd79798770581fbfb2f0dde62645009f381a31e49e7449d3dd"
+  },
+  "libusb": {
+    "file": "libusb-1.0.27.tar.gz",
+    "url": "https://github.com/libusb/libusb/archive/refs/tags/v1.0.27.tar.gz",
+    "sha256": "e8f18a7a36ecbb11fb820bd71540350d8f61bcd9db0d2e8c18a6fb80b214a3de"
+  }
+}

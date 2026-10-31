@@ -1,6 +1,12 @@
 import { showToast } from './feedback.js';
+import { validateLightingRequest } from '../../shared/contracts.js';
 
 const defaults = { color: '#7C5CFF', effect: 'estatico', brightness: 80, speed: 55, target: 'all' };
+const targetControllers = {
+  keyboard: new Set(['womier-sk80']),
+  mouse: new Set(['attack-shark-x11', 'furycube-g11']),
+  internal: new Set(['openrgb'])
+};
 
 export function initLighting() {
   const preview = document.getElementById('lighting-preview');
@@ -16,6 +22,10 @@ export function initLighting() {
   const realtime = document.getElementById('realtime-sync');
   if (!preview || !picker || !hex) return;
 
+  let devices = [];
+  let busy = false;
+  let statusMessage = null;
+
   const getState = () => ({
     color: picker.value.toUpperCase(),
     effect: document.querySelector('input[name="effect"]:checked')?.value ?? defaults.effect,
@@ -24,10 +34,54 @@ export function initLighting() {
     target: target.value,
   });
 
+  const targetDevices = (selectedTarget = target.value) => devices.filter((device) => {
+    if (device.capabilities?.lighting !== true || !device.controllerId) return false;
+    return selectedTarget === 'all' || (device.lightingTarget ? device.lightingTarget === selectedTarget : targetControllers[selectedTarget]?.has(device.controllerId) === true);
+  });
+
   const dispatch = () => {
+    statusMessage = null;
     const state = getState();
     document.dispatchEvent(new CustomEvent('prismhub:lighting-change', { detail: state }));
     return state;
+  };
+
+  const updateAvailability = () => {
+    const selectedDevices = targetDevices();
+    const hasDevice = selectedDevices.length > 0;
+    const isExperimental = selectedDevices.some((device) => device.controllerId === 'womier-sk80');
+    const selectedEffect = getState().effect;
+    const effectSupported = !hasDevice || selectedDevices.every((device) => (device.lightingEffects || []).includes(selectedEffect));
+
+    if (apply) apply.disabled = busy || !hasDevice || !effectSupported;
+
+    if (!status || busy) return;
+    if (statusMessage) { status.lastChild.textContent = ` ${statusMessage}`; return; }
+    if (!hasDevice) status.lastChild.textContent = ' Nenhum adaptador RGB compatível disponível para este destino';
+    else if (!effectSupported) status.lastChild.textContent = ' O efeito selecionado não é suportado por todos os destinos escolhidos';
+    else if (isExperimental) status.lastChild.textContent = ' SK80 experimental pronto — o PrismHub informará quando o Windows aceitar os relatórios';
+    else status.lastChild.textContent = ` ${selectedDevices.map((device) => device.name).join(', ')} pronto(s) para envio`;
+  };
+
+  const updateEffects = () => {
+    const selectedDevices = targetDevices();
+    const effectSets = selectedDevices.map((device) => new Set(device.lightingEffects || []));
+    const supported = effectSets.length
+      ? [...effectSets[0]].filter((effect) => effectSets.every((set) => set.has(effect)))
+      : null;
+    document.querySelectorAll('input[name="effect"]').forEach((input) => {
+      input.disabled = supported !== null && !supported.includes(input.value);
+      input.closest('.effect-card')?.classList.toggle('disabled', input.disabled);
+    });
+    const selected = document.querySelector('input[name="effect"]:checked');
+    if (selected?.disabled) {
+      const fallback = document.querySelector('input[name="effect"]:not(:disabled)');
+      if (fallback) {
+        fallback.checked = true;
+        fallback.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+    updateAvailability();
   };
 
   const setColor = (value) => {
@@ -54,30 +108,20 @@ export function initLighting() {
   hex.addEventListener('input', () => { if (hex.value.length === 7) setColor(hex.value.trim()); });
   document.querySelectorAll('.swatch').forEach((swatch) => swatch.addEventListener('click', () => setColor(swatch.dataset.color)));
   document.addEventListener('prismhub:lighting-change', (event) => {
+    if (realtime.getAttribute('aria-checked') !== 'true') return;
     preview.dataset.effect = event.detail.effect;
     preview.style.setProperty('--preview-brightness', String(event.detail.brightness / 100));
     const duration = Math.max(0.7, 4.6 - (event.detail.speed * 0.039));
     preview.style.setProperty('--effect-duration', `${duration.toFixed(2)}s`);
   });
-  document.querySelector('.effects-grid')?.addEventListener('change', dispatch);
+  document.querySelector('.effects-grid')?.addEventListener('change', () => { dispatch(); updateAvailability(); });
   brightness.addEventListener('input', dispatch);
   speed.addEventListener('input', dispatch);
-  target.addEventListener('change', dispatch);
+  target.addEventListener('change', () => { dispatch(); updateEffects(); });
+  realtime.addEventListener('click', () => requestAnimationFrame(dispatch));
   document.addEventListener('prismhub:devices-updated', (event) => {
-    const lightingDevices = event.detail.devices.filter((device) => device.capabilities.lighting === true);
-    const available = lightingDevices.length > 0;
-    const supportedEffects = new Set(lightingDevices.flatMap((device) => device.lightingEffects || []));
-    document.querySelectorAll('input[name="effect"]').forEach((input) => {
-      input.disabled = available && !supportedEffects.has(input.value);
-      input.closest('.effect-card')?.classList.toggle('disabled', input.disabled);
-    });
-    const selected = document.querySelector('input[name="effect"]:checked');
-    if (selected?.disabled) {
-      const fallback = document.querySelector('input[name="effect"]:not(:disabled)');
-      if (fallback) { fallback.checked = true; fallback.dispatchEvent(new Event('change', { bubbles: true })); }
-    }
-    apply.disabled = !available;
-    status.lastChild.textContent = available ? ` ${lightingDevices[0].name} pronto para configuração` : ' Nenhum dispositivo com iluminação confirmada';
+    devices = Array.isArray(event.detail?.devices) ? event.detail.devices : [];
+    updateEffects();
   });
 
   restore.addEventListener('click', () => {
@@ -91,28 +135,60 @@ export function initLighting() {
     if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
     brightness.dispatchEvent(new Event('input', { bubbles: true }));
     speed.dispatchEvent(new Event('input', { bubbles: true }));
-    status.lastChild.textContent = ' pronto para uso';
+    updateEffects();
     showToast('Configuração local restaurada.');
   });
 
   apply.addEventListener('click', async () => {
+    if (apply.disabled || busy) return;
     const state = dispatch();
-    apply.disabled = true;
+    busy = true;
     apply.setAttribute('aria-busy', 'true');
-    status.lastChild.textContent = ' enviando configuração ao dispositivo...';
+    updateAvailability();
+    status.lastChild.textContent = ' enviando relatórios de iluminação...';
     try {
       const result = await window.prismHub?.lighting.apply(state);
-      if (!result?.applied) throw new Error('Nenhum dispositivo confirmou a aplicação.');
-      status.lastChild.textContent = ` aplicado em ${result.devices[0].name}`;
-      showToast(`Iluminação aplicada de verdade em ${result.applied} dispositivo(s).`);
-    } catch (error) {
-      status.lastChild.textContent = ' falha ao aplicar no hardware';
-      showToast(error?.message || 'Não foi possível aplicar a iluminação.', 'error');
+      if (result?.partial) {
+        const completed = result.devices.map(device => device.name).join(', ');
+        const uncertain = (result.uncertainDevices || []).map(device => device.name).join(', ');
+        throw new Error(`Envio incompleto.${completed ? ` Envio concluído para ${completed}.` : ''}${uncertain ? ` Confira o estado de ${uncertain}.` : ''} ${(result.errors || []).map(item => item.message).join(' ')}`);
+      }
+      if (!result?.sent) throw new Error('Nenhum destino aceitou a solicitação de iluminação.');
+      const names = result.devices.map((device) => device.name).join(', ');
+      const keyboardResult = result.devices.find((device) => device.id === 'womier-sk80');
+      if (keyboardResult && keyboardResult.responses < 8) {
+        throw new Error('O SK80 não confirmou todas as etapas do protocolo; a cor não foi confirmada.');
+      }
+      statusMessage = keyboardResult
+        ? `SK80 respondeu às etapas do protocolo; confira a cor nos LEDs`
+        : `Relatórios enviados para ${names}; confira a iluminação física`;
+      if (result.warnings?.length) statusMessage += `. ${result.warnings.join(' ')}`;
+      status.lastChild.textContent = ` ${statusMessage}`;
+      if (result.warnings?.length) showToast(statusMessage, 'error');
+      else showToast(keyboardResult
+        ? 'O SK80 respondeu ao protocolo. Confira se a cor mudou nos LEDs.'
+        : `Relatórios enviados para ${names}. Confira se a iluminação mudou.`);
+    } catch (applyError) {
+      statusMessage = applyError?.message || 'Falha ao enviar a configuração ao hardware';
+      status.lastChild.textContent = ` ${statusMessage}`;
+      showToast(applyError?.message || 'Não foi possível enviar a iluminação.', 'error');
     } finally {
-      apply.disabled = false;
+      busy = false;
       apply.removeAttribute('aria-busy');
+      updateAvailability();
     }
   });
+
   setColor(defaults.color);
-  return { getState, setColor };
+  updateEffects();
+  return { getState, setColor, setState: value => {
+    const state = validateLightingRequest(value);
+    setColor(state.color); brightness.value = state.brightness; speed.value = state.speed; target.value = state.target;
+    updateEffects();
+    const input = [...document.querySelectorAll('input[name="effect"]')].find(item => item.value === state.effect);
+    if (input) input.checked = true;
+    brightness.dispatchEvent(new Event('input', { bubbles: true }));
+    speed.dispatchEvent(new Event('input', { bubbles: true }));
+    dispatch(); updateAvailability();
+  } };
 }

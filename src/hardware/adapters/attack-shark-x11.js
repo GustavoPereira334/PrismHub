@@ -1,7 +1,7 @@
 import HID from 'node-hid';
 
 const VENDOR_ID = 0x1d57;
-const PRODUCT_IDS = new Set([0xfa55, 0xfa60, 0xfa61]);
+const PRODUCT_IDS = new Set([0xfa55, 0xfa61]);
 const LIGHT_MODES = Object.freeze({ estatico: 0x10, pulso: 0x20, espectro: 0x30 });
 
 export function findX11FeatureInterface(devices) {

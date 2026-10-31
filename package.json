@@ -2,17 +2,62 @@
   "name": "prismhub",
   "version": "0.1.0",
   "description": "PrismHub hardware control center for Windows",
+  "author": "PrismHub contributors",
+  "license": "UNLICENSED",
   "main": "src/modules/main.js",
   "type": "module",
   "scripts": {
+    "prepare:runtime": "node scripts/prepare-runtime.mjs",
+    "dist:win": "node scripts/release-preflight.mjs && npm run prepare:runtime && electron-builder --win nsis --x64",
+    "pack:win": "npm run prepare:runtime && electron-builder --win --x64 --dir",
+    "check:runtime": "node --check src/modules/openrgbRuntime.js && node --check scripts/prepare-runtime.mjs",
     "start": "electron .",
-    "check": "node --check src/modules/main.js && node --check src/preload/preload.cjs && node --check src/hardware/hardware-service.js && node --check src/hardware/windows-discovery.js && node --check src/hardware/adapters/attack-shark-x11.js && node --check src/renderer/modules/lighting.js",
+    "smoke:security": "electron scripts/security-smoke.mjs",
+    "release:preflight": "node scripts/release-preflight.mjs",
+    "release:manifest": "node scripts/create-update-manifest.mjs",
+    "check": "node --check src/modules/main.js && node --check src/modules/openrgbProtocol.js && node --check src/modules/openrgbClient.js && node --check src/modules/hidManager.js && node --check src/modules/ipcHandlers.js && node --check src/preload/preload.cjs && node --check src/hardware/hardware-service.js && node --check src/hardware/windows-discovery.js && node --check src/hardware/windows-hid-feature.js && node --check src/hardware/adapters/attack-shark-x11.js && node --check src/hardware/adapters/womier-sk80.js && node --check src/hardware/adapters/furycube-g11.js && node --check src/shared/contracts.js && node --check src/renderer/modules/lighting.js && node --check src/renderer/modules/devices.js && node --check src/modules/electronSecurity.js && node --check src/modules/auditLogger.js && node --check scripts/security-smoke.mjs && node scripts/check-source.mjs",
     "test": "node --test"
   },
+  "build": {
+    "appId": "com.prismhub.desktop",
+    "productName": "PrismHub",
+    "artifactName": "PrismHub-Setup-${version}-${arch}.${ext}",
+    "directories": { "output": "dist" },
+    "files": ["src/**/*", "package.json", "THIRD_PARTY_NOTICES.md", "README.md"],
+    "asar": true,
+    "forceCodeSigning": true,
+    "npmRebuild": false,
+    "asarUnpack": ["node_modules/**/*.node", "node_modules/@koromix/**/*", "node_modules/koffi/**/*", "node_modules/node-hid/**/*"],
+    "extraResources": [
+      { "from": "vendor/openrgb", "to": "openrgb" },
+      { "from": "vendor/drivers", "to": "drivers" },
+      { "from": "vendor/licensing", "to": "licensing" }
+    ],
+    "win": {
+      "icon": "packaging/icon.ico",
+      "target": ["nsis"],
+      "requestedExecutionLevel": "asInvoker",
+      "verifyUpdateCodeSignature": true,
+      "executableName": "PrismHub"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "include": "packaging/installer.nsh",
+      "license": "packaging/INSTALLATION.txt",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    }
+  },
   "devDependencies": {
-    "electron": "^38.0.0"
+    "electron": "45.1.0",
+    "electron-builder": "26.18.0"
   },
   "dependencies": {
+    "koffi": "3.3.3",
     "node-hid": "3.3.0"
   }
 }

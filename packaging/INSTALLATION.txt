@@ -1,0 +1,9 @@
+PrismHub — Windows 64 bits
+
+Este instalador inclui o aplicativo PrismHub, o motor OpenRGB oficial não modificado e o instalador oficial assinado PawnIO para acesso aos componentes RGB internos.
+
+Ao continuar, o suporte PawnIO será instalado apenas se ausente. É compartilhado com outros programas e não será removido quando o PrismHub for desinstalado. O Windows solicita permissão de administrador para instalação e acesso ao hardware.
+
+OpenRGB é distribuído sob GPL-2.0-or-later. Os componentes independentes mantêm suas próprias licenças. Textos, avisos e arquivos-fonte ficam em resources/licensing no diretório instalado. Bibliotecas Qt são substituíveis e seus fontes estão incluídos; modificações para depurar essas bibliotecas não são proibidas por este instalador.
+
+Compatibilidade depende do hardware. Fans apenas Molex com botão não recebem comandos RGB por essa ligação. Encerre outros programas RGB antes de usar o controle para evitar disputa de acesso.

@@ -6,7 +6,8 @@ const execFileAsync = promisify(execFile);
 const powershell = process.platform === 'win32' ? 'powershell.exe' : null;
 
 const knownCandidates = new Map([
-  ['1D57:FA60', { id: 'attack-shark-x11', label: 'Attack Shark X11', basis: 'vid-pid' }],
+  ['1D57:FA60', { id: 'furycube-g11', label: 'FuryCube G11', basis: 'vid-pid' }],
+  ['05AC:024F', { id: 'womier-sk80', label: 'Womier SK80 (candidato)', basis: 'vid-pid' }],
 ]);
 
 const command = `

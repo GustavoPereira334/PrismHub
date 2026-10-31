@@ -10,12 +10,6 @@ export function initFeedback() {
       showToast('Não foi possível consultar os dispositivos.', 'error');
     }
   });
-  document.querySelector('[data-action="edit-profile"]')?.addEventListener('click', () => {
-    showToast('O perfil local não possui edição nesta versão.');
-  });
-  document.querySelector('[data-action="check-update"]')?.addEventListener('click', () => {
-    showToast('A verificação de atualizações estará disponível em uma versão futura.');
-  });
   document.querySelector('.icon-button[aria-label="Notificações"]')?.addEventListener('click', () => {
     showToast('Nenhuma notificação nova.');
   });
